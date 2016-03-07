@@ -27,9 +27,8 @@ var MenuExample = React.createClass({
                     // index available to the clicked function:
                     return <li className={style} onClick={self.clicked.bind(self, index)}>{m}</li>;
                 }) }
-
                 </ul>
-                
+
                 <p>Selected: {this.props.items[this.state.focused]}</p>
             </div>
         );
