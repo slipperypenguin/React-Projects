@@ -1,7 +1,6 @@
 // Let's create a "real-time search" component
 
 var SearchExample = React.createClass({
-
     getInitialState: function(){
         return { searchString: '' };
     },
@@ -10,7 +9,6 @@ var SearchExample = React.createClass({
         // If you comment out this line, the text box will not change its value.
         // This is because in React, an input cannot change independently of the value
         // that was assigned to it. In our case this is this.state.searchString.
-
         this.setState({searchString:e.target.value});
     },
 
@@ -36,7 +34,6 @@ var SearchExample = React.createClass({
 
 
 var libraries = [
-
     { name: 'Backbone.js', url: 'http://documentcloud.github.io/backbone/'},
     { name: 'AngularJS', url: 'https://angularjs.org/'},
     { name: 'jQuery', url: 'http://jquery.com/'},
@@ -51,10 +48,9 @@ var libraries = [
     { name: 'Moment', url: 'http://momentjs.com/'},
     { name: 'Express', url: 'http://expressjs.com/'},
     { name: 'Koa', url: 'http://koajs.com/'},
-
 ];
-// Render the SearchExample component on the page
 
+// Render the SearchExample component on the page
 ReactDOM.render(
     <SearchExample items={ libraries } />,
     document.getElementById('container')
