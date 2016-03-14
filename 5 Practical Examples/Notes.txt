@@ -1,0 +1,46 @@
+// inline code:   ``
+//block code: ```javascript
+              ....
+              ```
+## Link to use React
+`<script src="http://fb.me/react-0.10.0.min.js"></script>`
+this gives to access to the global React object.
+
+#JSX
+JSX is the recommended language to write React web apps.
+It is a slightly enhanced version of JavaScript that allows you to initialize React components by using an HTML-like syntax in your code
+It is compiled down to JavaScript before being interpreted by the browser.
+It is optional. You can use regular JavaScript if you want.
+
+#Components
+These are the building blocks of react apps.
+They are created by calling React.createClass() with an object of options and methods
+Each component has a state(an object with data) and each is in is in charge of their own rendering.
+  the render() method is called whenever the state changes. Allows for each part to load separately
+
+##onChange
+Updates of your controller's state should affect the HTML, not the other way around.
+For example(in Real Time Search project): once you've set the value of the text box,
+  it will stay the same, ignoring user's key presses, unless you update it in the onChange function.
+
+##Order Form Project
+- The real power of React comes when you combine multiple components.
+- This allows you to structure your code better and introduce a separation of concerns.
+- It will make your code reusable across different parts of your web application.
+- The first issue that arises when combining multiple components is how to make them communicate
+  -- One way is to pass the data that you need in attributes while initializing them.
+      This only works from parent to child components
+  -- For communication in the other direction, you can pass one of the parent component's methods as an attribute to the child
+      The child can then call this method, and notify the parent of events.
+
+##Image app with AJAX
+This example showed how you can combine react with jQuery, and how to load results via AJAX.
+React lets you use whatever other libraries you are comfortable with.
+Notice that our example uses the same picture component when rendering the picture list and the favorite list
+  This reuse is one of the benefits to organizing your code into components.
+
+#Conclusion
+React allows you to give clean structure to your application and promote code reuse.
+Its powerful virtual DOM allows the framework to speed up complex interfaces.
+React is suitable for rendering on the server side as well as the client side.
+  This makes it possible to build isomorphic apps that transition seamlessly between client and server
