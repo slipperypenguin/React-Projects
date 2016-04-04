@@ -15,9 +15,28 @@
 //  It is important that ReactDOM.render remain at the bottom of the script!!
 //ReactDOM.render should only be called after the composite components have been defined.
 var CommentBox = React.createClass({
-  getInitialState: function() { // 8. component
-    return {data: []};          // 8. component
-  },
+loadCommentsFromServer: function(){
+  $.ajax({                      // 8. component
+    url: this.props.url,        // 8. component
+    dataType: 'json',           // 8. component
+    cache: false,               // 8. component
+    success: function(data){    // 8. component
+      this.setState({data: data});      // 8. component
+    }.bind(this),
+    error: function(xhr, status, err){  // 8. component
+      console.error(this.props.url, status, err.toString()); // 8. component
+    }.bind(this)   // 8. component
+  });
+},
+
+getInitialState: function() { // 8. component
+  return {data: []};          // 8. component
+},
+
+componentDidMount: function(){
+  this.loadCommentsFromServer();
+  setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+},
 
   render: function(){
     return(
@@ -32,7 +51,7 @@ var CommentBox = React.createClass({
 });
 ReactDOM.render( //This should be at the end of everything. It packages things up to be called
   //<CommentBox data={data}/>, // 6. component. replaced with URL to fetch server data
-  <CommentBox url="/api/comments" />, // 7. component.
+  <CommentBox url="/api/comments" pollInterval={2000} />, // 7. component.  8. component
   document.getElementById('content') //This makes it so the app is created in the 'content' div in HTML
 );
 
@@ -67,11 +86,39 @@ var CommentList = React.createClass({ // 6. component
 });
 
 var CommentForm = React.createClass({
+  getInitialState: function() {
+      return {author: '', text: ''};
+    },
+    handleAuthorChange: function(e) {
+      this.setState({author: e.target.value});
+    },
+    handleTextChange: function(e) {
+      this.setState({text: e.target.value});
+    },
+
   render: function(){
     return(
-      <div className="CommentForm">
-        Well, hi there! I am a CommentForm.
-      </div>
+      <form className="commentForm">    // 9. component
+        <input
+          type="text"
+          placeholder="Your name"
+          value={this.state.author}
+          onChange={this.handleAuthorChange}
+        />  //10. component
+        <input
+          type="text"
+          placeholder="Say something..."
+          value={this.state.text}
+          onChange={this.handleTextChange}
+        />  //10. component
+
+        //<input type="text" placeholder="Your name" />  // 9. component
+        //<input type="text" placeholder="Say something..." />  // 9. component
+        <input type="submit" value="Post" />  // 9. component
+      </form>
+      //<div className="CommentForm">
+      //  Well, hi there! I am a CommentForm.
+      // </div>
     );
   }
 });
@@ -213,3 +260,107 @@ var data = [
 //a different time) request to the server we started earleir to fetch the data we need. The data is
 //already included in the server you started (based on the 'comments.json' file), so once it's
 //fetched, 'this.state.data' will look something like this:
+//    componentDidMount: function(){  // 8. component
+//      $.ajax({                      // 8. component
+//        url: this.props.url,        // 8. component
+//        dataType: 'json',           // 8. component
+//        cache: false,               // 8. component
+//        success: function(data){    // 8. component
+//          this.setState({data: data});      // 8. component
+//        }.bind(this),
+//        error: function(xhr, status, err){  // 8. component
+//          console.error(this.props.url, status, err.toString()); // 8. component
+//        }.bind(this)   // 8. component
+//      });
+//    },
+//Here, 'componentDidMount' is a method called automatically by react after a component is rendered
+//for the first time. The key to dynamic updates is the call to 'this.setState()'. We replace the
+//old array of comments with the new one from the server and the UI automatically updates itself!
+//Because of this reacticity, it is only a minor change to add live updates. We will use simple
+//polling here, but you could easily use WebSockets or other technologies.
+//  All we have done here is move the AJAX call to a separate mehtod and call it when the component
+//is first loaded and every 2 seconds after that. Try running this in your browser and changing the
+//'comments.json' file; within 2 seconds, the changes will show!!
+
+
+
+/*****Adding New Comments*****/
+// 9. Component
+//Now it's time to build the form. Our CommentForm component should ask the user for their name
+//and comment text and send a request to the server to save the comment.
+//    <form className="commentForm">
+//        <input type="text" placeholder="Your name" />
+//        <input type="text" placeholder="Say something..." />
+//        <input type="submit" value="Post" />
+//      </form>
+
+/*****Controlled Components*****/
+// 10. Component
+//  With the traditional DOM, 'input' elsements are rendered and the browser manages the state
+//(its rendered value). As a result, the state of the acrual DOM will differer from that of the
+//component. This is not ideal as the state of the view will differ from that of the component!
+//In React, components should always represent the state of the view and not only at the point of
+//initialization
+//  Hence, we will be using 'this.state' to save the user's input as it is entered. We define an
+//initial 'state' with two properies: author and text. We set them to be empty strings. In our
+//'<input>' elements, we set the 'value' prop to reflect the 'state' of the component and attach
+//'onChange' handlers to them. These '<input>' elements with a 'value' set are called controlled
+//components.
+//      getInitialState: function() {
+//        return {author: '', text: ''};
+//      },
+//      handleAuthorChange: function(e) {
+//        this.setState({author: e.target.value});
+//      },
+//      handleTextChange: function(e) {
+//        this.setState({text: e.target.value});
+//      },
+
+//      <input
+//               type="text"
+//               placeholder="Your name"
+//               value={this.state.author}
+//               onChange={this.handleAuthorChange}
+//             />
+//             <input
+//               type="text"
+//               placeholder="Say something..."
+//               value={this.state.text}
+//               onChange={this.handleTextChange}
+//             />
+
+
+
+/*****Events*****/
+//React attaches event handlers to components using a camelCase naming congention. We attach
+//'onChange' handlers to the two '<input>' elements. Now, as the user inserts text into the '<input'
+//fields, the attached 'onChange' callbacks are fired and the 'state' of the component is modified.
+//Subsequently, the rendered value of the 'input' element will be updated to reflect the current
+//'component' 'state.'
+
+
+/*****Submitting the Form*****/
+//Let's make the form interactive. When the user submits the form, we should: clear it, submit a
+//request to the server, and refresh the list of comments. To start, let's listen for the form's
+//submit event and clear it:
+/*    handleSubmit: function(e) {
+       e.preventDefault();
+       var author = this.state.author.trim();
+       var text = this.state.text.trim();
+       if (!text || !author) {
+         return;
+       }
+       // TODO: send request to the server
+       this.setState({author: '', text: ''});
+     },
+     render: function() {
+       return (
+         <form className="commentForm" onSubmit={this.handleSubmit}>
+*/
+//  We attach an 'onSubmit' handler to the form that clears the form fields when the form is
+//submitted with valid input.
+//  Call 'preventDefault()' on the event to prevent the browser's default action of submitting the
+//form.
+
+
+/*****Submitting the Form*****/

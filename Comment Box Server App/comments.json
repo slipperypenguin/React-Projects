@@ -2,11 +2,16 @@
     {
         "id": 1388534400000,
         "author": "Brady Paterson",
-        "text": "Hey there!"
+        "text": "Hey there!!"
     },
     {
         "id": 1420070400000,
         "author": "Mike Maholias",
         "text": "React is *great*!"
+    },
+    {
+        "id": 1459737480108,
+        "author": "Chris",
+        "text": "Hey hey hey"
     }
 ]
