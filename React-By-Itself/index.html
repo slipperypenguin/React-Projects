@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>This is a React app.</title>
+  </head>
+  <body>
+    <div id="react-app"></div>
+
+    <script src="https://cdn.jsdelivr.net/react/0.14.0-rc1/react.js"></script>
+    <script src="https://cdn.jsdelivr.net/react/0.14.0-rc1/react-dom.js"></script>
+    <script>
+      var rootElement =
+      React.createElement('div', {},
+        React.createElement('h1', {}, "Contacts"),
+        React.createElement('ul', {},
+          React.createElement('li', {},
+            React.createElement('h2', {}, "Brady Paterson"),
+            React.createElement('a', {href: 'mailto:brady@example.com'}, 'brady@example.org')
+          ),
+          React.createElement('li', {},
+            React.createElement('h2', {}, "Mike Maholias"),
+            React.createElement('a', {href: 'mailto:mike@example.com'}, 'mike@example.org')
+            )
+          )
+        )
+
+      ReactDOM.render(rootElement, document.getElementById('react-app'))
+    </script>
+
+  </body>
+</html>
