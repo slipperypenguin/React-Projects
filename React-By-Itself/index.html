@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="UTF-8" />
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>This is a React app.</title>
   </head>
   <body>
@@ -10,22 +11,110 @@
     <script src="https://cdn.jsdelivr.net/react/0.14.0-rc1/react.js"></script>
     <script src="https://cdn.jsdelivr.net/react/0.14.0-rc1/react-dom.js"></script>
     <script>
-      var rootElement =
-      React.createElement('div', {},
-        React.createElement('h1', {}, "Contacts"),
-        React.createElement('ul', {},
-          React.createElement('li', {},
-            React.createElement('h2', {}, "Brady Paterson"),
-            React.createElement('a', {href: 'mailto:brady@example.com'}, 'brady@example.org')
-          ),
-          React.createElement('li', {},
-            React.createElement('h2', {}, "Mike Maholias"),
-            React.createElement('a', {href: 'mailto:mike@example.com'}, 'mike@example.org')
+      //DATA
+      var contacts = [
+        {key: 1, name: "Brady Paterson", email: "brady@odicro.com", description: "Front-end Creator"},
+        {key: 2, name: "Mike", email: "mike@example.com"},
+        {key: 3, name: "Chris"},
+      ]
+
+      var newContact = {name: "", email: "", description: ""}
+
+      //COMPONENTS
+      var ContactItem = React.createClass({
+        propTypes: {
+          name: React.PropTypes.string.isRequired,
+          email: React.PropTypes.string.isRequired,
+          description: React.PropTypes.string,
+        },
+
+        render: function(){
+          //multi-line return statements are wrapped in parentheses to avoid bugs caused by forgetting
+          //JavaScript will remove the final lines when possible. SO parentheses are not really
+          //necessary
+          return(
+            React.createElement('li', {},
+              React.createElement('h2', {}, this.props.name),
+              React.createElement('a', {href: 'mailto:'+this.props.email}, this.props.email),
+              React.createElement('div', {}, this.props.description)
             )
           )
+
+        },
+      })
+
+      var ContactForm = React.createClass({
+        propTypes: {
+          contact: React.PropTypes.object.isRequired
+        },
+
+        render: function(){
+          return(
+            React.createElement('form', {className: 'ContactForm'},
+              React.createElement('input', {
+                type: 'text',
+                placeholder: 'Name (required)',
+                value: this.props.contact.name,
+              }),
+              React.createElement('input', {
+                type: 'email',
+                placeholder: 'Email',
+                value: this.props.contact.email,
+              }),
+              React.createElement('textarea', {
+                placeholder: 'Description',
+                value: this.props.contact.description,
+              }),
+              React.createElement('button', {type: 'submit'}, "Add Contact")
+            )
+          )
+        },
+      })
+
+
+      var ContactView = React.createClass({
+        propTypes: {
+          contacts: React.PropTypes.array.isRequired,
+          newContact: React.PropTypes.object.isRequired,
+        },
+
+        render: function(){
+          var contactItemElements = this.props.contacts
+          .filter(function(contact) { return contact.email})
+          .map(function(contact) { return React.createElement(ContactItem, contact)})
+
+          return(
+            React.createElement('div', {className: 'ContactView'},
+              React.createElement('h1', {className: 'ContactView-title'}, "Contacts"),
+              React.createElement('ul', {className: 'ContactView-list'}, contactItemElements),
+              React.createElement(ContactForm, {contact: this.props.newContact})
+            )
+          )
+        },
+      })
+
+      //RENDER
+      var contactItemElements = contacts
+      .filter(function(contact) {return contact.email})
+      .map(function(contact) {return React.createElement(ContactItem, contact)})
+
+      var rootElement =
+        React.createElement('div', {},
+          React.createElement('h1', {}, "Contacts"),
+          React.createElement('ul', {}, contactItemElements),
+          React.createElement(ContactForm, {contact: newContact})
         )
 
-      ReactDOM.render(rootElement, document.getElementById('react-app'))
+
+      //ENTRY POINT
+      ReactDOM.render(
+        React.createElement(ContactView, {
+          contacts: contacts,
+          newContact: newContact
+        }),
+        document.getElementById('react-app')
+      )
+
     </script>
 
   </body>
